@@ -1,10 +1,10 @@
 
 Param(
 	[Parameter(Mandatory = $false)]
-	[string] $StorageAccount = '...',
+	[string] $StorageAccount = 'https://dranstorage.file.core.windows.net',
 
 	[Parameter(Mandatory = $false)]
-	[string] $SASToken = 'sv??',
+	[string] $SASToken = 'sv=2021-06-08&ss=bfqt&srt=sco&sp=rltfx&se=2023-08-29T16:20:58Z&st=2022-08-29T08:20:58Z&spr=https,http&sig=6llbGWhpReuSamOiC7ZV%2BqmMhhj%2BskyMp8u0jhUiWoc%3D',
 
 	[Parameter(Mandatory = $false)]
 	[string] $ConfigPath = 'draninstallers/InstallesConfig.json'
