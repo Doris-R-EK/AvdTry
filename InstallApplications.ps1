@@ -1,16 +1,11 @@
-
-Param(
-	[Parameter(Mandatory = $false)]
-	[string] $StorageAccount = 'https://test.file.core.windows.net',
-
-	[Parameter(Mandatory = $false)]
-	[string] $SASToken = '',
-
-	[Parameter(Mandatory = $false)]
-	[string] $ConfigPath = 'test/InstallesConfig.json'
-)
-
 $KFolder = "c:\KInstallers"
+
+$StorageCofig = Get-Content -Path $(Join-Path -Path $KFolder -ChildPath 'StorageAccount.config')
+$StorageAccount = $StorageCofig[0].Split(']:')[-1]
+$StorageAccountUri = "https://$StorageAccount.file.core.windows.net"
+$SASToken = $StorageCofig[1].Split(']:')[-1]
+$ConfigPath = $StorageCofig[2].Split(']:')[-1]
+
 $LogFilePath = Join-Path -Path $KFolder -ChildPath 'Install.log'
 
 function Log ([string] $Content) {	
@@ -34,7 +29,7 @@ if (-not (Test-Path -Path $KFolder)) {
 if (-not (Test-Path $LogFilePath)) {
 	Write-Output "Created log file $LogFilePath."
 	New-Item -ItemType File -Path $LogFilePath -Force	
-    Add-Content -Path $LogFilePath -Value '-------------------------------------------------------' -Force
+	Add-Content -Path $LogFilePath -Value '-------------------------------------------------------' -Force
 	Add-Content -Path $LogFilePath -Value '                          Log                          ' -Force
 	Add-Content -Path $LogFilePath -Value '-------------------------------------------------------' -Force
 }
@@ -45,7 +40,7 @@ Log -Content "Start installation of applications..............................."
 # ---------------------------------------------------------
 Log -Content "Start downloading config file $($_.Name) ..."
 $ConfigFileName = 'InstallesConfig.json'
-$ConfigFileSASUrl = "$StorageAccount/$($ConfigPath)?$($SASToken)"
+$ConfigFileSASUrl = "$StorageAccountUri/$($ConfigPath)?$($SASToken)"
 	
 $ConfigFile = join-path $KFolder $ConfigFileName
 Invoke-WebRequest -Uri $ConfigFileSASUrl -OutFile $ConfigFile
@@ -74,7 +69,7 @@ foreach ($App in $Apps) {
 	foreach ($Certificate in $($App.Certificates)) {
 		Log -Content  "Start dowloading cretificate of $($Certificate.Name)"
 		$CerFileName = $Certificate.FileName
-		$CerFileSASUrl = "$StorageAccount/$($Certificate.Path)?$($SASToken)"			
+		$CerFileSASUrl = "$StorageAccountUri/$($Certificate.Path)?$($SASToken)"			
 		$CerFile = join-path $KFolder $CerFileName
 		Invoke-WebRequest -Uri $CerFileSASUrl -OutFile $CerFile
 
@@ -88,7 +83,7 @@ foreach ($App in $Apps) {
 	# Installation
 	foreach ($Installer in $($App.Installers)) {
 		Log -Content  "Start dowloading installer of $($Installer.Name)"			
-		$InstallerFileSASUrl = "$StorageAccount/$($Installer.Path)?$($SASToken)"			
+		$InstallerFileSASUrl = "$StorageAccountUri/$($Installer.Path)?$($SASToken)"			
 		$InstallerFile = join-path $KFolder $($Installer.Name)
 		Invoke-WebRequest -Uri $InstallerFileSASUrl -OutFile $InstallerFile
 
