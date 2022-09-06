@@ -7,7 +7,7 @@ Param(
 	[string] $SASToken = '',
 
 	[Parameter(Mandatory = $false)]
-	[string] $ConfigPath = 'draninstallers/InstallesConfig.json'
+	[string] $ConfigPath = 'test/InstallesConfig.json'
 )
 
 $KFolder = "c:\KInstallers"
@@ -39,7 +39,7 @@ if (-not (Test-Path $LogFilePath)) {
 	Add-Content -Path $LogFilePath -Value '-------------------------------------------------------' -Force
 }
 
-Log -Content "Start installation of kodak applications..............................."
+Log -Content "Start installation of applications..............................."
 # ---------------------------------------------------------
 #  3, Download config file
 # ---------------------------------------------------------
@@ -98,4 +98,4 @@ foreach ($App in $Apps) {
 	}
 }
 
-Log -Content "End installation of kodak applications...............................`n`n"
+Log -Content "End installation of applications...............................`n`n"
