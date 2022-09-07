@@ -6,6 +6,7 @@ $StorageAccountUri = "https://$StorageAccount.file.core.windows.net"
 $SASToken = $StorageCofig[1].Split(']:')[-1]
 $ConfigPath = $StorageCofig[2].Split(']:')[-1]
 
+
 $LogFilePath = Join-Path -Path $KFolder -ChildPath 'Install.log'
 
 function Log ([string] $Content) {	
