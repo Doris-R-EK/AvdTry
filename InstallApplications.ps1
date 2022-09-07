@@ -1,11 +1,10 @@
 $KFolder = "c:\KInstallers"
 
 $StorageCofig = Get-Content -Path $(Join-Path -Path $KFolder -ChildPath 'StorageAccount.config')
-$StorageAccount = $StorageCofig[0].Split(']:')[-1]
+$StorageAccount = $($StorageCofig[0] -split ']:',5, 'RegexMatch')[-1]
 $StorageAccountUri = "https://$StorageAccount.file.core.windows.net"
-$SASToken = $StorageCofig[1].Split(']:')[-1]
-$ConfigPath = $StorageCofig[2].Split(']:')[-1]
-
+$SASToken = $($StorageCofig[1] -split ']:',5, 'RegexMatch')[-1]
+$ConfigPath = $($StorageCofig[2] -split ']:',5, 'RegexMatch')[-1]
 
 $LogFilePath = Join-Path -Path $KFolder -ChildPath 'Install.log'
 
@@ -42,7 +41,8 @@ Log -Content "Start installation of applications..............................."
 Log -Content "Start downloading config file $($_.Name) ..."
 $ConfigFileName = 'InstallesConfig.json'
 $ConfigFileSASUrl = "$StorageAccountUri/$($ConfigPath)?$($SASToken)"
-	
+$ConfigFileSASUrl	
+
 $ConfigFile = join-path $KFolder $ConfigFileName
 Invoke-WebRequest -Uri $ConfigFileSASUrl -OutFile $ConfigFile
 Log -Content "Downloading done."
